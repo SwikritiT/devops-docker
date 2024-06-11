@@ -1,0 +1,41 @@
+## Link to dockerhub project
+
+[GuessTheBook](https://hub.docker.com/r/swikrititripathi/guessthebook)
+
+## Link to the Github Repo
+
+[GuessTheBook](https://github.com/SwikritiT/GuessTheBook)
+
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+> The project will run in port `8080`
+
+### Type-Check, Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Previw the app
+
+```sh
+npm run preview
+```
+
+> The project will be previwed in port `8080`
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
