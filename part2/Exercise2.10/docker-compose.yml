@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:13.2-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres
+    container_name: postgres
+    volumes:
+      - ./database:/var/lib/postgresql/data/
+    networks:
+      - nginx-net
+
+  backend:
+    image: backend
+    environment:
+      REQUEST_ORIGIN: http://localhost
+      REDIS_HOST: redis
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DATABASE: postgres
+    container_name: backend
+    depends_on:
+      - db
+    networks:
+      - nginx-net
+
+  frontend:
+    image: frontend
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost/api
+    container_name: frontend
+    depends_on:
+      - backend
+    networks:
+      - nginx-net
+
+  redis:
+    image: redis:7.0-alpine
+    restart: unless-stopped
+    networks:
+      - nginx-net
+    container_name: redis
+
+  proxy:
+    image: nginx:1.19-alpine
+    volumes:
+      # - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+    networks:
+      - nginx-net
+    depends_on:
+      - backend
+    container_name: proxy
+
+networks:
+  nginx-net:
+    name: nginx-net
