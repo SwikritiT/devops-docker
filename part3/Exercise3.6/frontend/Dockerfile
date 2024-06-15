@@ -10,9 +10,15 @@ RUN npm install
 # copy rest of the project
 COPY . .
 
-RUN npm run build
+RUN npm run build && \
+    npm install -g serve && \
+    apk update && apk add --no-cache bash && \
+    addgroup -S appgroup && adduser -S appuser -G appgroup && \
+    chown -R appuser:appgroup /usr/src/app && \
+    rm -rf /var/cache/apk/*
 
-RUN npm install -g serve
+# Switch to the non-root user
+USER appuser
 
 # Set environment variable
 ENV REACT_APP_BACKEND_URL="http://localhost:8080"
